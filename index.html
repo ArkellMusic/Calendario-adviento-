@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calendario de Adviento</title>
+<meta name="theme-color" content="#0f2a20">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Dancing+Script:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pino:#0f2a20; --pino2:#173d2e; --rojo:#b3202c; --rojo2:#8c1520;
+  --crema:#f6ecdc; --crema2:#e9dcc4; --oro:#d9b25f; --oro2:#a97f2e;
+  --vino:#4a0f17; --tinta:#2a1a12;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{
+  font-family:Inter,system-ui,sans-serif;color:var(--crema);
+  background:var(--pino);
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(217,178,95,.10), transparent 40%),
+    radial-gradient(circle at 80% 90%, rgba(179,32,44,.18), transparent 45%),
+    radial-gradient(rgba(255,255,255,.05) 1px, transparent 1.5px);
+  background-size:auto,auto,22px 22px;
+  overflow-x:hidden;
+}
+#nieve{position:fixed;inset:0;pointer-events:none;z-index:1}
+
+/* ---------- INTRO: regalo ---------- */
+#intro{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:24px;text-align:center;transition:opacity .9s ease}
+#intro.fuera{opacity:0;pointer-events:none}
+.kicker{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--oro)}
+#intro h1{font-family:Fraunces,serif;font-weight:700;font-size:clamp(28px,6vw,44px);line-height:1.1}
+#intro h1 em{font-family:"Dancing Script",cursive;font-style:normal;color:var(--oro);font-size:1.25em}
+.regalo{position:relative;width:190px;height:190px;cursor:pointer;margin-top:30px;animation:flota 3s ease-in-out infinite}
+@keyframes flota{50%{transform:translateY(-8px) rotate(-1deg)}}
+.caja{position:absolute;bottom:0;left:10px;right:10px;height:130px;background:linear-gradient(135deg,var(--rojo),var(--rojo2));border-radius:6px;box-shadow:0 20px 40px rgba(0,0,0,.4)}
+.tapa{position:absolute;top:30px;left:0;right:0;height:42px;background:linear-gradient(135deg,#c72a36,var(--rojo));border-radius:6px;box-shadow:0 6px 10px rgba(0,0,0,.25);transition:transform 1s cubic-bezier(.5,-0.4,.3,1.4);z-index:3}
+.cinta-v{position:absolute;left:50%;width:26px;margin-left:-13px;background:linear-gradient(90deg,var(--oro2),var(--oro),var(--oro2))}
+.caja .cinta-v{top:0;bottom:0}
+.tapa .cinta-v{top:0;bottom:0}
+.lazo{position:absolute;top:-34px;left:50%;width:100px;margin-left:-50px;height:40px;transition:transform .8s ease,opacity .6s}
+.lazo::before,.lazo::after{content:"";position:absolute;bottom:0;width:46px;height:34px;border:9px solid var(--oro);border-radius:50% 50% 40% 40%}
+.lazo::before{left:2px;transform:rotate(-20deg)}
+.lazo::after{right:2px;transform:rotate(20deg)}
+.etiqueta{position:absolute;bottom:22px;left:50%;transform:translateX(-50%) rotate(-4deg);background:var(--crema);color:var(--tinta);font-family:"Dancing Script",cursive;font-size:24px;font-weight:700;padding:2px 16px;border-radius:3px;box-shadow:0 3px 6px rgba(0,0,0,.3);z-index:4}
+.brillo{position:absolute;left:50%;top:60px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:#ffe8a8;box-shadow:0 0 0 0 rgba(255,220,140,.9);opacity:0;z-index:2;transition:all 1.1s ease}
+.regalo.abierto{animation:none}
+.regalo.abierto .lazo{transform:translateY(-60px) scale(.6);opacity:0}
+.regalo.abierto .tapa{transform:translate(70px,-90px) rotate(35deg)}
+.regalo.abierto .brillo{opacity:1;box-shadow:0 0 120px 90px rgba(255,220,140,.85)}
+.pista{font-size:13px;color:rgba(246,236,220,.6);animation:latido 1.8s infinite}
+@keyframes latido{50%{opacity:.35}}
+
+/* ---------- CALENDARIO ---------- */
+#cal{position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:48px 16px 60px;opacity:0;transition:opacity 1s .2s}
+#cal.visible{opacity:1}
+header{text-align:center;margin-bottom:36px}
+header .para{font-family:"Dancing Script",cursive;font-size:clamp(56px,13vw,104px);color:var(--crema);line-height:1;text-shadow:0 4px 30px rgba(217,178,95,.25)}
+header p{max-width:520px;margin:14px auto 0;color:rgba(246,236,220,.8);font-size:15px;line-height:1.6}
+header .firma{font-family:"Dancing Script",cursive;color:var(--oro);font-size:24px;margin-top:8px}
+.progreso{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--oro);border:1px solid rgba(217,178,95,.4);border-radius:99px;padding:6px 14px}
+
+.rejilla{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:minmax(110px,1fr);grid-auto-flow:dense;gap:12px}
+.puerta{position:relative;perspective:900px;border:0;background:none;cursor:pointer;font:inherit;color:inherit;min-height:110px}
+.puerta.ancha{grid-column:span 2}
+.puerta.alta{grid-row:span 2}
+.puerta.gran{grid-column:span 2;grid-row:span 2}
+.hueco{position:absolute;inset:0;border-radius:10px;background:var(--vino);box-shadow:inset 0 4px 14px rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-size:36px}
+.hoja{position:absolute;inset:0;border-radius:10px;transform-origin:left center;transition:transform .9s cubic-bezier(.3,.7,.3,1),box-shadow .3s;transform-style:preserve-3d;display:flex;align-items:flex-start;justify-content:flex-start;padding:10px 12px;box-shadow:0 6px 14px rgba(0,0,0,.35)}
+.hoja .num{font-family:Fraunces,serif;font-weight:900;font-size:clamp(26px,4vw,40px);line-height:1}
+.hoja .pomo{position:absolute;right:12px;top:50%;width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.5}
+.c-rojo .hoja{background:linear-gradient(150deg,#c4303c,var(--rojo2));color:var(--crema)}
+.c-crema .hoja{background:linear-gradient(150deg,var(--crema),var(--crema2));color:var(--rojo2)}
+.c-verde .hoja{background:linear-gradient(150deg,#245a43,var(--pino2));color:var(--crema);border:1px solid rgba(217,178,95,.25)}
+.c-oro .hoja{background:linear-gradient(135deg,#f0d38c,var(--oro) 45%,var(--oro2));color:var(--vino)}
+.puerta:not(.cerrada):hover .hoja{transform:rotateY(-12deg)}
+.puerta.abierta .hoja{transform:rotateY(-105deg);box-shadow:none}
+.puerta.abierta:hover .hoja{transform:rotateY(-105deg)}
+.puerta.cerrada .hoja::after{content:"🔒";position:absolute;right:10px;bottom:8px;font-size:13px;opacity:.55}
+.puerta.hoy .hoja{animation:brilla 2s ease-in-out infinite}
+@keyframes brilla{50%{box-shadow:0 0 0 3px var(--oro),0 0 26px 4px rgba(217,178,95,.6)}}
+.puerta.canjeada .hueco::after{content:"✓";position:absolute;right:8px;bottom:6px;font-size:13px;color:var(--oro)}
+/* gran día */
+.gran .hoja{flex-direction:column;justify-content:space-between}
+.gran .hoja .num{font-size:clamp(64px,11vw,110px)}
+.gran .rot{font-size:11px;letter-spacing:.25em;text-transform:uppercase;font-weight:600}
+.gran .lazito{position:absolute;inset:0;pointer-events:none}
+.gran .lazito::before{content:"";position:absolute;left:58%;top:0;bottom:0;width:16px;background:rgba(255,255,255,.45)}
+.gran .lazito::after{content:"";position:absolute;top:42%;left:0;right:0;height:16px;background:rgba(255,255,255,.45)}
+
+/* ---------- AVISO ---------- */
+#aviso{position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);background:#1c0c0f;border:1px solid rgba(217,178,95,.35);color:var(--crema);padding:12px 18px;border-radius:12px;font-size:14px;opacity:0;transition:all .35s;z-index:30;max-width:calc(100% - 32px);text-align:center}
+#aviso.ver{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- VALE ---------- */
+#modal{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(8,18,14,.75);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .35s}
+#modal.ver{opacity:1;pointer-events:auto}
+.vale{position:relative;width:100%;max-width:380px;background:var(--crema);color:var(--tinta);border-radius:14px;padding:30px 26px 24px;text-align:center;transform:scale(.85) rotate(-2deg);transition:transform .5s cubic-bezier(.3,1.5,.5,1);box-shadow:0 30px 60px rgba(0,0,0,.5)}
+#modal.ver .vale{transform:scale(1) rotate(0)}
+.vale::before,.vale::after{content:"";position:absolute;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;background:#18231e}
+.vale::before{left:-13px}.vale::after{right:-13px}
+.vale .borde{position:absolute;inset:8px;border:1.5px dashed rgba(140,21,32,.35);border-radius:10px;pointer-events:none}
+.vale .dia{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--rojo)}
+.vale .por{font-family:Fraunces,serif;font-weight:900;font-size:13px;letter-spacing:.35em;color:var(--oro2);margin-top:14px}
+.vale .emo{font-size:54px;margin:8px 0 4px}
+.vale h2{font-family:Fraunces,serif;font-weight:700;font-size:26px;line-height:1.15;color:var(--rojo2)}
+.vale p{font-size:15px;line-height:1.55;margin-top:12px;color:#4b3a30}
+.vale .firma{font-family:"Dancing Script",cursive;font-size:22px;color:var(--rojo);margin-top:14px}
+.acciones{display:flex;gap:10px;margin-top:20px}
+.acciones button{flex:1;border:0;border-radius:99px;padding:12px;font:600 14px Inter,sans-serif;cursor:pointer}
+.b-canjear{background:var(--rojo);color:var(--crema)}
+.b-cerrar{background:transparent;color:var(--tinta);border:1px solid rgba(42,26,18,.2)!important}
+.sello{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%) rotate(-16deg) scale(2);border:4px double var(--rojo);color:var(--rojo);font:900 22px Fraunces,serif;letter-spacing:.2em;padding:6px 16px;border-radius:8px;opacity:0;transition:all .4s cubic-bezier(.3,1.6,.5,1);pointer-events:none;background:rgba(246,236,220,.6)}
+.vale.usado .sello{opacity:.85;transform:translate(-50%,-50%) rotate(-16deg) scale(1)}
+
+footer{text-align:center;margin-top:40px;font-size:12px;color:rgba(246,236,220,.45)}
+
+@media (max-width:640px){
+  .rejilla{grid-template-columns:repeat(4,1fr);gap:9px;grid-auto-rows:minmax(84px,1fr)}
+  .puerta{min-height:84px}
+  #cal{padding-top:34px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="nieve"></canvas>
+
+<section id="intro">
+  <div class="kicker">Diciembre ya está aquí</div>
+  <h1><span id="i-de"></span> te ha preparado<br>algo <em>especial</em></h1>
+  <div class="regalo" id="regalo" role="button" tabindex="0" aria-label="Abrir el regalo">
+    <div class="brillo"></div>
+    <div class="caja"><div class="cinta-v"></div></div>
+    <div class="tapa"><div class="cinta-v"></div><div class="lazo"></div></div>
+    <div class="etiqueta" id="i-para"></div>
+  </div>
+  <div class="pista">Toca el regalo para abrirlo</div>
+</section>
+
+<main id="cal" hidden>
+  <header>
+    <div class="kicker">Para</div>
+    <div class="para" id="c-para"></div>
+    <p id="c-dedic"></p>
+    <div class="firma" id="c-firma"></div>
+    <div class="progreso" id="c-prog"></div>
+  </header>
+  <div class="rejilla" id="rejilla"></div>
+  <footer>Hecho con mucho amor · Navidad <span id="c-anio"></span></footer>
+</main>
+
+<div id="aviso"></div>
+
+<div id="modal" aria-modal="true" role="dialog">
+  <div class="vale" id="vale">
+    <div class="borde"></div>
+    <div class="dia" id="v-dia"></div>
+    <div class="por">VALE POR</div>
+    <div class="emo" id="v-emo"></div>
+    <h2 id="v-tit"></h2>
+    <p id="v-txt"></p>
+    <div class="firma" id="v-firma"></div>
+    <div class="sello">CANJEADO</div>
+    <div class="acciones">
+      <button class="b-cerrar" id="b-cerrar">Cerrar</button>
+      <button class="b-canjear" id="b-canjear">Canjear</button>
+    </div>
+  </div>
+</div>
+
+<script src="vales.js"></script>
+<script>
+(() => {
+  // ---- fecha (con ?hoy=2026-12-10 para probar) ----
+  const qs = new URLSearchParams(location.search);
+  const hoyParam = qs.get("hoy");
+  const hoy = hoyParam ? new Date(hoyParam + "T12:00:00") : new Date();
+  const anio = CONFIG.anio;
+  const diaDisponible = d => hoy >= new Date(anio, 11, d, 0, 0, 0);
+  const esHoy = d => hoy.getFullYear() === anio && hoy.getMonth() === 11 && hoy.getDate() === d;
+
+  // ---- almacenamiento seguro ----
+  const KEY = "adviento-" + anio + "-" + CONFIG.para;
+  let estado = { abiertas: [], canjeadas: [] };
+  try { estado = Object.assign(estado, JSON.parse(localStorage.getItem(KEY)) || {}); } catch (e) {}
+  const guardar = () => { try { localStorage.setItem(KEY, JSON.stringify(estado)); } catch (e) {} };
+
+  // ---- textos ----
+  const $ = id => document.getElementById(id);
+  $("i-de").textContent = CONFIG.de;
+  $("i-para").textContent = CONFIG.para;
+  $("c-para").textContent = CONFIG.para;
+  $("c-dedic").textContent = CONFIG.dedicatoria;
+  $("c-firma").textContent = "Con todo mi amor, " + CONFIG.de;
+  $("c-anio").textContent = anio;
+  $("v-firma").textContent = "— " + CONFIG.de;
+
+  // ---- rejilla: orden y formas ----
+  const orden = [7,15,1,22,10,4,24,20,13,9,18,2,11,5,16,3,21,8,14,12,19,6,23,17];
+  const forma = {1:"ancha",9:"alta",13:"ancha",5:"alta",18:"ancha",21:"alta",12:"ancha",23:"ancha",17:"ancha",24:"gran"};
+  const colores = ["c-rojo","c-crema","c-verde","c-rojo","c-crema","c-rojo","c-verde","c-crema"];
+  const rejilla = $("rejilla");
+  const puertas = {};
+
+  orden.forEach((d, i) => {
+    const v = VALES[d];
+    const b = document.createElement("button");
+    b.className = "puerta " + (forma[d] || "") + " " + (d === 24 ? "c-oro" : colores[i % colores.length]);
+    b.setAttribute("aria-label", "Día " + d);
+    b.innerHTML = `<div class="hueco">${v.emoji}</div>` +
+      (d === 24
+        ? `<div class="hoja"><span class="lazito"></span><span class="rot">Nochebuena</span><span class="num">24</span></div>`
+        : `<div class="hoja"><span class="num">${d}</span><span class="pomo"></span></div>`);
+    b.addEventListener("click", () => pulsar(d));
+    rejilla.appendChild(b);
+    puertas[d] = b;
+  });
+
+  function pintar() {
+    let abiertas = 0;
+    for (let d = 1; d <= 24; d++) {
+      const p = puertas[d];
+      const disp = diaDisponible(d);
+      const ab = estado.abiertas.includes(d);
+      if (ab) abiertas++;
+      p.classList.toggle("cerrada", !disp);
+      p.classList.toggle("abierta", ab);
+      p.classList.toggle("hoy", esHoy(d) && !ab);
+      p.classList.toggle("canjeada", estado.canjeadas.includes(d));
+    }
+    $("c-prog").textContent = `🎄 ${abiertas} de 24 puertas abiertas`;
+  }
+
+  let avisoT;
+  function aviso(txt) {
+    const a = $("aviso");
+    a.textContent = txt; a.classList.add("ver");
+    clearTimeout(avisoT); avisoT = setTimeout(() => a.classList.remove("ver"), 2600);
+  }
+
+  let actual = null;
+  function pulsar(d) {
+    if (!diaDisponible(d)) {
+      const faltan = Math.ceil((new Date(anio, 11, d) - hoy) / 864e5);
+      aviso(`🔒 Esta puerta se abre el ${d} de diciembre` + (faltan > 0 && faltan < 40 ? ` (faltan ${faltan} ${faltan === 1 ? "día" : "días"})` : ""));
+      return;
+    }
+    const primera = !estado.abiertas.includes(d);
+    if (primera) { estado.abiertas.push(d); guardar(); pintar(); }
+    setTimeout(() => abrirVale(d), primera ? 650 : 0);
+  }
+
+  function abrirVale(d) {
+    actual = d;
+    const v = VALES[d];
+    $("v-dia").textContent = d === 24 ? "24 de diciembre · El gran día" : `${d} de diciembre`;
+    $("v-emo").textContent = v.emoji;
+    $("v-tit").textContent = v.titulo;
+    $("v-txt").textContent = v.texto;
+    const usado = estado.canjeadas.includes(d);
+    $("vale").classList.toggle("usado", usado);
+    $("b-canjear").textContent = usado ? "Ya canjeado" : "Canjear";
+    $("b-canjear").disabled = usado;
+    $("modal").classList.add("ver");
+    if (primeraVez(d)) confeti(d === 24 ? 160 : 60);
+  }
+  const vistos = new Set();
+  const primeraVez = d => !vistos.has(d) && vistos.add(d);
+
+  function cerrar() { $("modal").classList.remove("ver"); }
+  $("b-cerrar").onclick = cerrar;
+  $("modal").addEventListener("click", e => { if (e.target.id === "modal") cerrar(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") cerrar(); });
+  $("b-canjear").onclick = () => {
+    if (actual == null || estado.canjeadas.includes(actual)) return;
+    if (!confirm("¿Quieres canjear este vale ahora? 💌")) return;
+    estado.canjeadas.push(actual); guardar(); pintar();
+    $("vale").classList.add("usado");
+    $("b-canjear").textContent = "Ya canjeado"; $("b-canjear").disabled = true;
+  };
+
+  // ---- intro ----
+  const intro = $("intro"), regalo = $("regalo"), cal = $("cal");
+  function entrar() {
+    if (regalo.classList.contains("abierto")) return;
+    regalo.classList.add("abierto");
+    setTimeout(() => {
+      intro.classList.add("fuera");
+      cal.hidden = false;
+      requestAnimationFrame(() => cal.classList.add("visible"));
+    }, 1300);
+    setTimeout(() => intro.remove(), 2300);
+  }
+  regalo.addEventListener("click", entrar);
+  regalo.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") entrar(); });
+
+  pintar();
+
+  // ---- nieve + confeti ----
+  const cv = $("nieve"), cx = cv.getContext("2d");
+  let W, H, copos = [], piezas = [];
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  function medir() { W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+  medir(); addEventListener("resize", medir);
+  for (let i = 0; i < 70; i++) copos.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 2.2 + .6, v: Math.random() * .6 + .25, o: Math.random() * 6 });
+  function confeti(n) {
+    const cols = ["#d9b25f", "#b3202c", "#f6ecdc", "#245a43", "#f0d38c"];
+    for (let i = 0; i < n; i++) piezas.push({ x: W / 2, y: H / 2, vx: (Math.random() - .5) * 12, vy: Math.random() * -11 - 3, r: Math.random() * 6 + 3, c: cols[i % cols.length], a: Math.random() * 6, va: (Math.random() - .5) * .3, vida: 160 });
+  }
+  const reducir = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function bucle(t) {
+    cx.clearRect(0, 0, W, H);
+    cx.fillStyle = "rgba(255,255,255,.75)";
+    for (const c of copos) {
+      if (!reducir) { c.y += c.v; c.x += Math.sin(t / 1500 + c.o) * .3; }
+      if (c.y > H + 5) { c.y = -5; c.x = Math.random() * W; }
+      cx.beginPath(); cx.arc(c.x, c.y, c.r, 0, 7); cx.fill();
+    }
+    piezas = piezas.filter(p => p.vida-- > 0);
+    for (const p of piezas) {
+      p.vy += .25; p.x += p.vx; p.y += p.vy; p.vx *= .99; p.a += p.va;
+      cx.save(); cx.translate(p.x, p.y); cx.rotate(p.a); cx.globalAlpha = Math.min(1, p.vida / 40);
+      cx.fillStyle = p.c; cx.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); cx.restore();
+    }
+    cx.globalAlpha = 1;
+    requestAnimationFrame(bucle);
+  }
+  requestAnimationFrame(bucle);
+})();
+</script>
+</body>
+</html>
