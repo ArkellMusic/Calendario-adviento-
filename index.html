@@ -64,11 +64,11 @@ header p{max-width:520px;margin:14px auto 0;color:rgba(246,236,220,.8);font-size
 header .firma{font-family:"Dancing Script",cursive;color:var(--oro);font-size:24px;margin-top:8px}
 .progreso{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--oro);border:1px solid rgba(217,178,95,.4);border-radius:99px;padding:6px 14px}
 
-.rejilla{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:minmax(110px,1fr);grid-auto-flow:dense;gap:12px}
+.rejilla{display:grid;grid-template-columns:repeat(5,1fr);grid-auto-rows:minmax(110px,auto);gap:12px}
 .puerta{position:relative;perspective:900px;border:0;background:none;cursor:pointer;font:inherit;color:inherit;min-height:110px}
 .puerta.ancha{grid-column:span 2}
 .puerta.alta{grid-row:span 2}
-.puerta.gran{grid-column:span 2;grid-row:span 2}
+.puerta.gran{grid-column:span 2;min-height:150px}
 .hueco{position:absolute;inset:0;border-radius:10px;background:var(--vino);box-shadow:inset 0 4px 14px rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-size:36px}
 .hoja{position:absolute;inset:0;border-radius:10px;transform-origin:left center;transition:transform .9s cubic-bezier(.3,.7,.3,1),box-shadow .3s;transform-style:preserve-3d;display:flex;align-items:flex-start;justify-content:flex-start;padding:10px 12px;box-shadow:0 6px 14px rgba(0,0,0,.35)}
 .hoja .num{font-family:Fraunces,serif;font-weight:900;font-size:clamp(26px,4vw,40px);line-height:1}
@@ -86,7 +86,7 @@ header .firma{font-family:"Dancing Script",cursive;color:var(--oro);font-size:24
 .puerta.canjeada .hueco::after{content:"✓";position:absolute;right:8px;bottom:6px;font-size:13px;color:var(--oro)}
 /* gran día */
 .gran .hoja{flex-direction:column;justify-content:space-between}
-.gran .hoja .num{font-size:clamp(64px,11vw,110px)}
+.gran .hoja .num{font-size:clamp(56px,9vw,88px)}
 .gran .rot{font-size:11px;letter-spacing:.25em;text-transform:uppercase;font-weight:600}
 .gran .lazito{position:absolute;inset:0;pointer-events:none}
 .gran .lazito::before{content:"";position:absolute;left:58%;top:0;bottom:0;width:16px;background:rgba(255,255,255,.45)}
@@ -120,8 +120,10 @@ header .firma{font-family:"Dancing Script",cursive;color:var(--oro);font-size:24
 footer{text-align:center;margin-top:40px;font-size:12px;color:rgba(246,236,220,.45)}
 
 @media (max-width:640px){
-  .rejilla{grid-template-columns:repeat(4,1fr);gap:9px;grid-auto-rows:minmax(84px,1fr)}
+  .rejilla{grid-template-columns:repeat(4,1fr);gap:9px;grid-auto-rows:minmax(84px,auto)}
   .puerta{min-height:84px}
+  .puerta.ancha-m{grid-column:span 2}
+  .puerta.gran{grid-column:1/-1;min-height:140px}
   #cal{padding-top:34px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -201,8 +203,8 @@ footer{text-align:center;margin-top:40px;font-size:12px;color:rgba(246,236,220,.
   $("v-firma").textContent = "— " + CONFIG.de;
 
   // ---- rejilla: orden y formas ----
-  const orden = [7,15,1,22,10,4,24,20,13,9,18,2,11,5,16,3,21,8,14,12,19,6,23,17];
-  const forma = {1:"ancha",9:"alta",13:"ancha",5:"alta",18:"ancha",21:"alta",12:"ancha",23:"ancha",17:"ancha",24:"gran"};
+  const orden = Array.from({ length: 24 }, (_, i) => i + 1);
+  const forma = { 23: "ancha-m", 24: "gran" };
   const colores = ["c-rojo","c-crema","c-verde","c-rojo","c-crema","c-rojo","c-verde","c-crema"];
   const rejilla = $("rejilla");
   const puertas = {};
