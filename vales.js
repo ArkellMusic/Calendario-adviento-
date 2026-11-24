@@ -11,7 +11,7 @@ const CONFIG = {
 // emoji, título corto y texto del vale de cada día
 const VALES = {
   1:  { emoji: "💄", titulo: "Caprichito en Druni", texto: "Entramos juntos, tú eliges lo que quieras y yo pago. Sin mirar precios." },
-  2:  { emoji: "☕", titulo: "Merienda donde tú elijas", texto: "Tú pones el sitio y el antojo; yo pongo la compañía y la cartera." },
+  2:  { emoji: "🤭", titulo: "Cómprale a tu novio el pito de goma", texto: "Este vale va al revés: hoy te toca a ti. Le debes a Hugo su pito de goma, sin excusas ni retrasos 😂" },
   3:  { emoji: "💆‍♀️", titulo: "Masaje con final a tu elección", texto: "Aceite, velas y todo el tiempo del mundo. El final… lo decides tú 😏" },
   4:  { emoji: "🍫", titulo: "Caja de tus dulces favoritos", texto: "Una caja llena solo de las cosas que más te gustan. Prohibido compartir (salvo conmigo)." },
   5:  { emoji: "🎄", titulo: "Paseo por las luces de Navidad", texto: "Chocolate caliente en mano y una vuelta por las luces de la ciudad, de tu mano." },
