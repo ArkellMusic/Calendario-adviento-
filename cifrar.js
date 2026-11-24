@@ -23,7 +23,7 @@ if (html.includes('src="vales.js"') || html.includes('qs.get("hoy")')) throw new
   const enc = new TextEncoder();
   const sal = crypto.getRandomValues(new Uint8Array(16));
   const iv = crypto.getRandomValues(new Uint8Array(12));
-  const base = await crypto.subtle.importKey("raw", enc.encode(clave.normalize("NFC").trim().toLowerCase()), "PBKDF2", false, ["deriveKey"]);
+  const base = await crypto.subtle.importKey("raw", enc.encode(clave.normalize("NFC").toLowerCase().replace(/[^\p{L}\p{N}]/gu, "")), "PBKDF2", false, ["deriveKey"]);
   const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: sal, iterations: 250000, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["encrypt"]);
   const cifrado = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, enc.encode(html)));
   const b64 = u => Buffer.from(u).toString("base64");

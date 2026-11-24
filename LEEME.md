@@ -11,7 +11,7 @@ Probar en local con una fecha: abre `index.html?hoy=2026-12-10` (el modo prueba 
 2. En netlify.com: *Add new site → Import an existing project → GitHub* y elige este repositorio.
 3. En *Site configuration → Environment variables* añade `CLAVE` = vuestra contraseña.
 4. Despliega. Netlify usa `netlify.toml` (comando `node cifrar.js`, carpeta `publico`).
-5. Opcional: cambia el nombre del sitio en *Site configuration → Change site name* (p. ej. `paula-adviento-xxxx`).
+5. Opcional: cambia el nombre del sitio en *Site configuration → Change site name* (ahora: `micalendario-adviento`).
 
 ## Notificaciones al canjear
 1. Instalad los dos la app **ntfy** (App Store / Google Play).

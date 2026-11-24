@@ -27,8 +27,8 @@ form.mal{animation:temblor .4s}
 <form id="f" autocomplete="off">
   <div class="ico">🔐</div>
   <h1>Solo para ti</h1>
-  <p>Escribe la contraseña secreta para entrar.</p>
-  <input id="clave" type="password" placeholder="Contraseña" autofocus>
+  <p>Pista: recuerda la fecha 💕</p>
+  <input id="clave" type="password" placeholder="dd/mm/aaaa" inputmode="numeric" autofocus>
   <button id="b">Entrar</button>
   <div class="error" id="err"></div>
 </form>
@@ -38,7 +38,7 @@ const GUARDADA = "adviento-clave";
 const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 async function abrir(clave) {
   const enc = new TextEncoder();
-  const base = await crypto.subtle.importKey("raw", enc.encode(clave.normalize("NFC").trim().toLowerCase()), "PBKDF2", false, ["deriveKey"]);
+  const base = await crypto.subtle.importKey("raw", enc.encode(clave.normalize("NFC").toLowerCase().replace(/[^\p{L}\p{N}]/gu, "")), "PBKDF2", false, ["deriveKey"]);
   const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(DATOS.s), iterations: 250000, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
   const plano = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(DATOS.i) }, key, b64(DATOS.c));
   return new TextDecoder().decode(plano);
