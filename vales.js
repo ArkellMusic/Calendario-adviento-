@@ -6,10 +6,6 @@ const CONFIG = {
     "Este diciembre cada día tiene una sorpresa escondida. Veinticuatro puertas para recordarte lo mucho que te quiero.",
   // Año del calendario (las puertas se abren el día N de diciembre de este año)
   anio: 2026,
-  // Canal de avisos de ntfy (https://ntfy.sh). Los dos os suscribís a este
-  // nombre en la app ntfy y os llega un aviso cada vez que se canjea un vale.
-  // Es secreto: no lo compartas con nadie más.
-  avisos: "hugo-paula-wsimraxuixtx",
 };
 
 // emoji, título corto y texto del vale de cada día

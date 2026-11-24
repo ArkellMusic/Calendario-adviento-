@@ -32,6 +32,10 @@ form.mal{animation:temblor .4s}
   <button id="b">Entrar</button>
   <div class="error" id="err"></div>
 </form>
+<!-- Formulario oculto para que Netlify registre los avisos de canjeo -->
+<form name="canjes" data-netlify="true" netlify-honeypot="campo-bot" hidden>
+  <input name="subject"><input name="dia"><input name="vale"><input name="fecha"><input name="campo-bot">
+</form>
 <script>
 const DATOS = __DATOS__;
 const GUARDADA = "adviento-clave";

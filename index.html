@@ -287,20 +287,18 @@ footer{text-align:center;margin-top:40px;font-size:12px;color:rgba(246,236,220,.
     $("b-canjear").textContent = "Ya canjeado"; $("b-canjear").disabled = true;
   };
 
-  // ---- notificación a los dos (ntfy) ----
+  // ---- aviso por correo a los dos (formularios de Netlify) ----
   function avisar(d) {
-    if (!CONFIG.avisos || hoyParam) return; // en modo prueba no se avisa
+    if (hoyParam) return; // en modo prueba no se avisa
     const v = VALES[d];
-    fetch("https://ntfy.sh/", {
-      method: "POST",
-      body: JSON.stringify({
-        topic: CONFIG.avisos,
-        title: `${v.emoji} ¡${CONFIG.para} ha canjeado un vale!`,
-        message: `Día ${d}: ${v.titulo}`,
-        tags: ["gift"],
-        priority: 4,
-      }),
-    }).catch(() => {});
+    const datos = new URLSearchParams({
+      "form-name": "canjes",
+      subject: `${v.emoji} ¡${CONFIG.para} ha canjeado un vale! Día ${d}: ${v.titulo}`,
+      dia: String(d),
+      vale: v.titulo,
+      fecha: new Date().toLocaleString("es-ES"),
+    });
+    fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: datos.toString() }).catch(() => {});
   }
 
   // ---- intro ----
