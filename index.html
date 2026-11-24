@@ -280,9 +280,26 @@ footer{text-align:center;margin-top:40px;font-size:12px;color:rgba(246,236,220,.
     if (actual == null || estado.canjeadas.includes(actual)) return;
     if (!confirm("¿Quieres canjear este vale ahora? 💌")) return;
     estado.canjeadas.push(actual); guardar(); pintar();
+    avisar(actual);
     $("vale").classList.add("usado");
     $("b-canjear").textContent = "Ya canjeado"; $("b-canjear").disabled = true;
   };
+
+  // ---- notificación a los dos (ntfy) ----
+  function avisar(d) {
+    if (!CONFIG.avisos || hoyParam) return; // en modo prueba no se avisa
+    const v = VALES[d];
+    fetch("https://ntfy.sh/", {
+      method: "POST",
+      body: JSON.stringify({
+        topic: CONFIG.avisos,
+        title: `${v.emoji} ¡${CONFIG.para} ha canjeado un vale!`,
+        message: `Día ${d}: ${v.titulo}`,
+        tags: ["gift"],
+        priority: 4,
+      }),
+    }).catch(() => {});
+  }
 
   // ---- intro ----
   const intro = $("intro"), regalo = $("regalo"), cal = $("cal");

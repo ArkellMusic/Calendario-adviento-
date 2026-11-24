@@ -1,0 +1,9 @@
+# Netlify genera la versión protegida con la contraseña guardada en la variable CLAVE
+[build]
+  command = "node cifrar.js"
+  publish = "publico"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

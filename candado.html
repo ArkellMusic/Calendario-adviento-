@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>🎁</title>
+<meta name="theme-color" content="#0f2a20">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:#0f2a20;background-image:radial-gradient(circle at 20% 10%,rgba(217,178,95,.12),transparent 40%),radial-gradient(circle at 80% 90%,rgba(179,32,44,.2),transparent 45%),radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.5px);background-size:auto,auto,22px 22px;font-family:Georgia,serif;color:#f6ecdc;text-align:center}
+form{width:100%;max-width:340px}
+.ico{font-size:64px;margin-bottom:14px}
+h1{font-size:26px;font-weight:700;margin-bottom:8px}
+p{font:15px/1.5 system-ui,sans-serif;color:rgba(246,236,220,.75);margin-bottom:22px}
+input{width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(217,178,95,.45);background:rgba(0,0,0,.25);color:#f6ecdc;font:16px system-ui,sans-serif;text-align:center;outline:none}
+input:focus{border-color:#d9b25f;box-shadow:0 0 0 3px rgba(217,178,95,.25)}
+button{width:100%;margin-top:12px;padding:14px;border:0;border-radius:99px;background:#b3202c;color:#f6ecdc;font:600 15px system-ui,sans-serif;cursor:pointer}
+button:disabled{opacity:.6}
+.error{min-height:20px;margin-top:12px;font:14px system-ui,sans-serif;color:#ffb3b3}
+form.mal{animation:temblor .4s}
+@keyframes temblor{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+</style>
+</head>
+<body>
+<form id="f" autocomplete="off">
+  <div class="ico">🔐</div>
+  <h1>Solo para ti</h1>
+  <p>Escribe la contraseña secreta para entrar.</p>
+  <input id="clave" type="password" placeholder="Contraseña" autofocus>
+  <button id="b">Entrar</button>
+  <div class="error" id="err"></div>
+</form>
+<script>
+const DATOS = __DATOS__;
+const GUARDADA = "adviento-clave";
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function abrir(clave) {
+  const enc = new TextEncoder();
+  const base = await crypto.subtle.importKey("raw", enc.encode(clave.normalize("NFC").trim().toLowerCase()), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(DATOS.s), iterations: 250000, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+  const plano = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(DATOS.i) }, key, b64(DATOS.c));
+  return new TextDecoder().decode(plano);
+}
+function mostrar(html) { document.open(); document.write(html); document.close(); }
+const f = document.getElementById("f"), err = document.getElementById("err"), btn = document.getElementById("b");
+f.addEventListener("submit", async e => {
+  e.preventDefault();
+  const clave = document.getElementById("clave").value;
+  if (!clave.trim()) return;
+  btn.disabled = true; btn.textContent = "Abriendo…"; err.textContent = "";
+  try {
+    const html = await abrir(clave);
+    try { localStorage.setItem(GUARDADA, clave); } catch (e) {}
+    mostrar(html);
+  } catch (e) {
+    err.textContent = "Esa no es… prueba otra vez 🤭";
+    f.classList.remove("mal"); void f.offsetWidth; f.classList.add("mal");
+    btn.disabled = false; btn.textContent = "Entrar";
+  }
+});
+// Si ya entró antes en este móvil, no se la volvemos a pedir
+(async () => {
+  let g = null; try { g = localStorage.getItem(GUARDADA); } catch (e) {}
+  if (g) { try { mostrar(await abrir(g)); } catch (e) { try { localStorage.removeItem(GUARDADA); } catch (e) {} } }
+})();
+</script>
+</body>
+</html>
